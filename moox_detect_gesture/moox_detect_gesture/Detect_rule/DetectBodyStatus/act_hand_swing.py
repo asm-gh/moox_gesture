@@ -62,7 +62,7 @@ class Act_Hand_Swing:
                   nose=np.zeros(3),
                   is_data=False):
         # 初期値
-        self.is_hand_swing = False
+        self.is_hand_swing = 4
         self.is_r_hand_swing = 4 #4 is no data
         self.is_l_hand_swing = 4
         self.is_l_hand_swipe = 4
