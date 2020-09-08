@@ -5,7 +5,7 @@ import math
 import os
 import configparser
 
-class Act_Hand_Push:
+class Act_Hand_Gesture_Name:
     def __init__(self, threshold=20, window_size=5):
         # 肘基準で拳が動き続ける状態 1.0s平均で、しきい値以上の運動をしているか？
         # 読み込み用軸パラメータ
