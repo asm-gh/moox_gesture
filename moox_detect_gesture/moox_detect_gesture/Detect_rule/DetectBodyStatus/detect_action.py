@@ -116,7 +116,7 @@ class Detect_action:
                     naval=self.naval,
                     is_data=self.is_data)
             self.is_hand_push, self.is_r_hand_push, self.is_l_hand_push = \
-                self.act_hand_swipe.calculate(
+                self.act_hand_push.calculate(
                     r_wrist=self.r_wrist,
                     l_wrist=self.l_wrist,
                     r_elbow=self.r_elbow,
