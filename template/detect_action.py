@@ -7,7 +7,7 @@ import numpy as np
 # 行動推定用ルール
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from act_hand_gesture_name import Act_Hand_Swing
+from act_hand_gesture_name import Act_Hand_Gesture_Name
 
 class Detect_action:
     def __init__(self, axis=3):
@@ -49,9 +49,8 @@ class Detect_action:
         self.l_thumb = np.zeros((axis))
         self.r_thumb = np.zeros((axis))
         # インスタンス生成
-        self.act_hand_swing = Act_Hand_Swing()
-        self.act_hand_swipe = Act_Hand_Swipe()
-        self.act_hand_push = Act_Hand_Push()
+
+        self.act_hand_gesture_name = Act_Hand_Gesture_Name()
         self.output_data={}
 
     def Update(self, body_dict):
@@ -92,7 +91,7 @@ class Detect_action:
             # 計算
             # 手を振る
             self.is_hand_gesture_name, self.is_r_hand_gesture_name, self.is_l_hand_gesture_name = \
-                self.act_hand_swing.calculate(
+                self.act_hand_gesture_name.calculate(
                     r_wrist=self.r_wrist,
                     l_wrist=self.l_wrist,
                     r_elbow=self.r_elbow,
