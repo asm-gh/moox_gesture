@@ -96,12 +96,14 @@ class Act_Hand_Push:
             if r_elbow_wrist_z > r_elbow_wrist_d:
                 if r_wrist[z_idx] > r_elbow[z_idx]:
                     if (move_amnt_R) < thresh_small:
-                        self.is_r_hand_push = 1
+                        if r_wrist[z_idx] > boundary_line:
+                            self.is_r_hand_push = 1
 
             if l_elbow_wrist_z > l_elbow_wrist_d:
                 if l_wrist[z_idx] > l_elbow[z_idx]:
                     if (move_amnt_R) < thresh_small:
-                        self.is_l_hand_push = 1 
+                        if l_wrist[z_idx] > boundary_line:
+                            self.is_l_hand_push = 1 
                 
             push_val = []
             push_val.append(self.is_r_hand_push)
