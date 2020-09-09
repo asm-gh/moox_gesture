@@ -38,8 +38,8 @@ class Act_Hand_Swipe:
         self.thresh_small = inifile.getint('gesture_recognition','thresh_wave_small')
         self.thresh_med = inifile.getint('gesture_recognition','thresh_wave_medium')
         self.thresh_large = inifile.getint('gesture_recognition','thresh_wave_large')
-        self.handtip_L_x_recent = deque(maxlen=movement_window) #NCP Edit
-        self.handtip_R_x_recent = deque(maxlen=movement_window) #NCP Edit
+        self.handtip_L_x_recent = deque(maxlen=movement_window)
+        self.handtip_R_x_recent = deque(maxlen=movement_window)
 
         self.is_r_hand_swipe = 0
         self.is_l_hand_swipe = 0
@@ -62,9 +62,9 @@ class Act_Hand_Swipe:
                   nose=np.zeros(3),
                   is_data=False):
         # 初期値
-        self.is_hand_swipe = 4
-        self.is_l_hand_swipe = 4
-        self.is_r_hand_swipe = 4
+        self.is_hand_swipe = 0
+        self.is_l_hand_swipe = 0
+        self.is_r_hand_swipe = 0
 
 
         x_idx = 0
