@@ -38,8 +38,8 @@ class Act_Hand_Push:
         self.thresh_small = inifile.getint('gesture_recognition','thresh_wave_small')
         self.thresh_med = inifile.getint('gesture_recognition','thresh_wave_medium')
         self.thresh_large = inifile.getint('gesture_recognition','thresh_wave_large')
-        self.handtip_L_x_recent = deque(maxlen=movement_window) #NCP Edit
-        self.handtip_R_x_recent = deque(maxlen=movement_window) #NCP Edit
+        self.handtip_L_x_recent = deque(maxlen=movement_window)
+        self.handtip_R_x_recent = deque(maxlen=movement_window)
 
         self.is_r_hand_push = 0
         self.is_l_hand_push = 0
@@ -63,8 +63,8 @@ class Act_Hand_Push:
                   is_data=False):
         # 初期値
         self.is_hand_push = 0
-        self.is_l_hand_push = 4
-        self.is_r_hand_push = 4
+        self.is_l_hand_push = 0
+        self.is_r_hand_push = 0
 
         x_idx = 0
         y_idx = 1
