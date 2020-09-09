@@ -65,6 +65,8 @@ class Detect_action:
             self.r_wrist[ax] = body_dict['r_wrist'][axt[ax]]
             self.r_hand[ax] = body_dict['r_hand'][axt[ax]]
             self.r_handtip[ax] = body_dict['r_handtip'][axt[ax]]
+            self.r_shoulder[ax] = body_dict['r_shoulder'][axt[ax]]
+            self.l_shoulder[ax] = body_dict['l_shoulder'][axt[ax]]
             self.l_hand[ax] = body_dict['l_hand'][axt[ax]]
             self.l_handtip[ax] = body_dict['l_handtip'][axt[ax]]
             self.head[ax] = body_dict['head'][axt[ax]]
@@ -123,6 +125,8 @@ class Detect_action:
                     l_elbow=self.l_elbow,
                     r_handtip=self.r_handtip,
                     l_handtip=self.l_handtip,
+                    r_shoulder=self.r_shoulder,
+                    l_shoulder=self.l_shoulder,
                     head=self.head,
                     naval=self.naval,
                     is_data=self.is_data)
