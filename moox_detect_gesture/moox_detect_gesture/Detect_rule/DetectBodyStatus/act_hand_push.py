@@ -88,20 +88,27 @@ class Act_Hand_Push:
 
 
             push_threshold = .8
-            r_elbow_wrist_z = (r_elbow[z_idx] - r_wrist[z_idx])
-            r_elbow_wrist_d = push_threshold*(np.linalg.norm(r_elbow - r_wrist))
-            l_elbow_wrist_z = (l_elbow[z_idx] - l_wrist[z_idx])
-            l_elbow_wrist_d = push_threshold*(np.linalg.norm(l_elbow - l_wrist))
+            r_elbow_wrist_d = np.linalg.norm(r_elbow - r_wrist)
+            r_shoulder_elbow_d = np.linalg.norm(r_shoulder - r_elbow)
+            r_shoulder_wrist_d = np.linalg.norm(r_shoulder - r_wrist)
+            r_total_d = push_threshold*(r_elbow_wrist_d + r_elbow_wrist_d)
+            l_elbow_wrist_d = np.linalg.norm(l_elbow - l_wrist)
+            l_shoulder_elbow_d = np.linalg.norm(l_shoulder - l_elbow)
+            l_shoulder_wrist_d = np.linalg.norm(l_shoulder - l_wrist)
+            l_total_d = push_threshold*(l_elbow_wrist_d + l_elbow_wrist_d)
 
-            if r_elbow_wrist_z > r_elbow_wrist_d:
-                if r_wrist[z_idx] > r_elbow[z_idx]:
-                    if (move_amnt_R) < thresh_small:
-                        self.is_r_hand_push = 1
 
-            if l_elbow_wrist_z > l_elbow_wrist_d:
-                if l_wrist[z_idx] > l_elbow[z_idx]:
-                    if (move_amnt_R) < thresh_small:
-                        self.is_l_hand_push = 1 
+            if r_wrist[y_idx] > r_elbow[y_idx]:
+                if r_shoulder_wrist_d > r_total_d:
+                    if r_wrist[z_idx] > r_elbow[z_idx]:
+                        if (move_amnt_R) < thresh_small:
+                            self.is_r_hand_push = 1
+
+            if r_wrist[y_idx] > r_elbow[y_idx]:
+                if l_shoulder_wrist_d > l_total_d:
+                    if l_wrist[z_idx] > l_elbow[z_idx]:
+                        if (move_amnt_L) < thresh_small:
+                            self.is_l_hand_push = 1 
                 
             push_val = []
             push_val.append(self.is_r_hand_push)
