@@ -41,8 +41,8 @@ class Act_Hand_Swing:
         self.handtip_L_x_recent = deque(maxlen=movement_window) #NCP Edit
         self.handtip_R_x_recent = deque(maxlen=movement_window) #NCP Edit
 
-        self.is_r_hand_swing = 0 #NCP
-        self.is_l_hand_swing = 0 #NCP
+        self.is_r_hand_swing = 0
+        self.is_l_hand_swing = 0
         self.is_hand_swing = 0
 
     def calculate(self,
@@ -62,14 +62,10 @@ class Act_Hand_Swing:
                   nose=np.zeros(3),
                   is_data=False):
         # 初期値
-        self.is_hand_swing = 4
-        self.is_r_hand_swing = 4 #4 is no data
-        self.is_l_hand_swing = 4
-        self.is_l_hand_swipe = 4
-        self.is_r_hand_swipe = 4
-        self.is_l_hand_push = 4
-        self.is_r_hand_push = 4
-
+        self.is_hand_swing = 0
+        self.is_r_hand_swing = 0
+        self.is_l_hand_swing = 0
+        
         is_r_hand_up = False
         is_l_hand_up = False
         is_hand_up = False
