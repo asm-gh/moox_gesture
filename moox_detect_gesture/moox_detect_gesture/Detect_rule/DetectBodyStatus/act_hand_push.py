@@ -90,7 +90,7 @@ class Act_Hand_Push:
             push_threshold = .8
             r_elbow_wrist_z = (r_elbow[z_idx] - r_wrist[z_idx])
             r_elbow_wrist_d = push_threshold*(np.linalg.norm(r_elbow - r_wrist))
-            l_elbow_wrist_z = (l_elbow[z_idx] - lwrist[z_idx])
+            l_elbow_wrist_z = (l_elbow[z_idx] - l_wrist[z_idx])
             l_elbow_wrist_d = push_threshold*(np.linalg.norm(l_elbow - l_wrist))
 
             if r_elbow_wrist_z > r_elbow_wrist_d:
