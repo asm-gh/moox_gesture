@@ -91,11 +91,11 @@ class Act_Hand_Push:
             r_elbow_wrist_d = np.linalg.norm(r_elbow - r_wrist)
             r_shoulder_elbow_d = np.linalg.norm(r_shoulder - r_elbow)
             r_shoulder_wrist_d = np.linalg.norm(r_shoulder - r_wrist)
-            r_total_d = push_threshold*(r_elbow_wrist_d + r_elbow_wrist_d)
+            r_total_d = push_threshold*(r_shoulder_elbow_d + r_elbow_wrist_d)
             l_elbow_wrist_d = np.linalg.norm(l_elbow - l_wrist)
             l_shoulder_elbow_d = np.linalg.norm(l_shoulder - l_elbow)
             l_shoulder_wrist_d = np.linalg.norm(l_shoulder - l_wrist)
-            l_total_d = push_threshold*(l_elbow_wrist_d + l_elbow_wrist_d)
+            l_total_d = push_threshold*(l_shoulder_elbow_d + l_elbow_wrist_d)
 
 
             if r_wrist[y_idx] > r_elbow[y_idx]:
@@ -104,7 +104,7 @@ class Act_Hand_Push:
                         if (move_amnt_R) < thresh_small:
                             self.is_r_hand_push = 1
 
-            if r_wrist[y_idx] > r_elbow[y_idx]:
+            if l_wrist[y_idx] > l_elbow[y_idx]:
                 if l_shoulder_wrist_d > l_total_d:
                     if l_wrist[z_idx] > l_elbow[z_idx]:
                         if (move_amnt_L) < thresh_small:
