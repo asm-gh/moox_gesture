@@ -83,8 +83,8 @@ class Act_Hand_Swipe:
         if (is_data):
             self.handtip_L_x_recent.append(l_handtip[x_idx])
             self.handtip_R_x_recent.append(r_handtip[x_idx])
-            self.handtip_L_z_recent.append(l_handtip[x_idx])
-            self.handtip_R_z_recent.append(r_handtip[x_idx])
+            self.handtip_L_z_recent.append(l_handtip[z_idx])
+            self.handtip_R_z_recent.append(r_handtip[z_idx])
 
             self.is_hand_swipe = 0
             self.is_l_hand_swipe = 0
