@@ -63,8 +63,8 @@ class Act_Hand_Swing:
                   l_handtip=np.zeros(3),
                   r_hand=np.zeros(3),
                   l_hand=np.zeros(3),
-                  r_thumb=np.zeros(3),
-                  l_thumb=np.zeros(3),
+                  r_shoulder=np.zeros(3),
+                  l_shoulder=np.zeros(3),
                   head=np.zeros(3),
                   chest=np.zeros(3),
                   naval=np.zeros(3),
@@ -117,7 +117,7 @@ class Act_Hand_Swing:
                 self.handtip_L_x_recent.append(l_handtip[x_idx])
                 if l_handtip_dif > 15: #-# If new point is higher, window_move_hilo_L is 1. If less window_move_hilo_L is -1
                     self.window_move_hilo_L.append(1)
-                elif l_handtip_dif < -15
+                elif l_handtip_dif < -15:
                     self.window_move_hilo_L.append(-1)
                 else:
                     self.window_move_hilo_L.append(0)
