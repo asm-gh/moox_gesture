@@ -90,7 +90,7 @@ class Act_Hand_Push:
             push_threshold = .8
             r_elbow_wrist_d = np.linalg.norm(r_elbow - r_wrist)
             r_shoulder_elbow_d = np.linalg.norm(r_shoulder - r_elbow)
-            r_shoulder_wrist_d = np.linalg.norm(r_shoulder - r_wrist)
+            r_shoulder_wrist_d = np.linalg.norm(l_shoulder - r_wrist)
             r_total_d = push_threshold*(r_shoulder_elbow_d + r_elbow_wrist_d)
             l_elbow_wrist_d = np.linalg.norm(l_elbow - l_wrist)
             l_shoulder_elbow_d = np.linalg.norm(l_shoulder - l_elbow)
