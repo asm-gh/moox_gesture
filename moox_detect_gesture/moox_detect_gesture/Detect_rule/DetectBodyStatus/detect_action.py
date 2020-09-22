@@ -10,6 +10,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from act_hand_swing import Act_Hand_Swing
 from act_hand_swipe import Act_Hand_Swipe
 from act_hand_push import Act_Hand_Push
+from act_hand_up import Act_Hand_Up
+from act_hand_clap import Act_Hand_Clap
+from act_hand_stat import Act_Hand_Stat
 
 class Detect_action:
     def __init__(self, axis=3):
@@ -54,6 +57,9 @@ class Detect_action:
         self.act_hand_swing = Act_Hand_Swing()
         self.act_hand_swipe = Act_Hand_Swipe()
         self.act_hand_push = Act_Hand_Push()
+        self.act_hand_up = Act_Hand_Up()
+        self.act_hand_clap = Act_Hand_Clap()
+        self.act_hand_stat = Act_Hand_Stat()
         self.output_data={}
 
     def Update(self, body_dict):
@@ -85,6 +91,16 @@ class Detect_action:
         dic_data['is_hand_push'] = int(self.is_hand_push)
         dic_data['is_r_hand_push'] = int(self.is_r_hand_push)
         dic_data['is_l_hand_push'] = int(self.is_l_hand_push)
+        dic_data['is_hand_up'] = int(self.is_hand_up)
+        dic_data['is_l_hand_up'] = int(self.is_l_hand_up)
+        dic_data['is_r_hand_up'] = int(self.is_r_hand_up)
+        dic_data['is_hand_clap'] = int(self.is_hand_clap)
+        dic_data['is_r_hand_clap'] = int(self.is_r_hand_clap)
+        dic_data['is_l_hand_clap'] = int(self.is_l_hand_clap)
+        dic_data['is_hand_x'] = int(self.is_hand_x)
+        dic_data['is_hand_y'] = int(self.is_hand_y)
+        dic_data['is_hand_z'] = int(self.is_hand_z)
+
         self.output_data = dic_data
 
     def Calculate(self, body_dict, is_data=False):
@@ -134,6 +150,49 @@ class Detect_action:
                     head=self.head,
                     naval=self.naval,
                     is_data=self.is_data)
+            self.is_hand_up, self.is_r_hand_up, self.is_l_hand_up = \
+                self.act_hand_up.calculate(
+                    r_wrist=self.r_wrist,
+                    l_wrist=self.l_wrist,
+                    r_elbow=self.r_elbow,
+                    l_elbow=self.l_elbow,
+                    r_handtip=self.r_handtip,
+                    l_handtip=self.l_handtip,
+                    r_shoulder=self.r_shoulder,
+                    l_shoulder=self.l_shoulder,
+                    head=self.head,
+                    naval=self.naval,
+                    is_data=self.is_data)
+            self.is_hand_clap, self.is_r_hand_clap, self.is_l_hand_clap = \
+                self.act_hand_clap.calculate(
+                    r_wrist=self.r_wrist,
+                    l_wrist=self.l_wrist,
+                    r_elbow=self.r_elbow,
+                    l_elbow=self.l_elbow,
+                    r_handtip=self.r_handtip,
+                    l_handtip=self.l_handtip,
+                    r_hand=self.r_hand,
+                    l_hand=self.l_hand,
+                    r_shoulder=self.r_shoulder,
+                    l_shoulder=self.l_shoulder,
+                    head=self.head,
+                    naval=self.naval,
+                    is_data=self.is_data)
+            self.is_hand_x, self.is_hand_y, self.is_hand_z = \
+                self.act_hand_stat.calculate(
+                    r_wrist=self.r_wrist,
+                    l_wrist=self.l_wrist,
+                    r_elbow=self.r_elbow,
+                    l_elbow=self.l_elbow,
+                    r_handtip=self.r_handtip,
+                    l_handtip=self.l_handtip,
+                    r_hand=self.r_hand,
+                    l_hand=self.l_hand,
+                    r_shoulder=self.r_shoulder,
+                    l_shoulder=self.l_shoulder,
+                    head=self.head,
+                    naval=self.naval,
+                    is_data=self.is_data)
         else:
             self.is_hand_swing = 0
             self.is_r_hand_swing = 0
@@ -144,5 +203,15 @@ class Detect_action:
             self.is_hand_push = 0
             self.is_r_hand_push = 0
             self.is_l_hand_push = 0
+            self.is_hand_up = 0
+            self.is_r_hand_up = 0
+            self.is_l_hand_up = 0
+            self.is_hand_clap = 0
+            self.is_r_hand_clap = 0
+            self.is_l_hand_clap = 0
+            self.is_hand_x = 0
+            self.is_hand_y = 0
+            self.is_hand_z = 0
+
         # データ格納
         self.set_data()
