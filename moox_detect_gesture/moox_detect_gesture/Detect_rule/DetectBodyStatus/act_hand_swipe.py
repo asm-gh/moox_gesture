@@ -34,14 +34,15 @@ class Act_Hand_Swipe:
         self.naval = np.zeros((axis))
         self.nose = np.zeros((axis))
 
-        movement_window = inifile.getint('gesture_recognition','movement_window')
+        deque_size = inifile.getint('gesture_recognition','deque_size')
         self.thresh_small = inifile.getint('gesture_recognition','thresh_wave_small')
         self.thresh_med = inifile.getint('gesture_recognition','thresh_wave_medium')
         self.thresh_large = inifile.getint('gesture_recognition','thresh_wave_large')
-        self.handtip_L_x_recent = deque(maxlen=movement_window)
-        self.handtip_R_x_recent = deque(maxlen=movement_window)
-        self.handtip_recent = deque(maxlen=movement_window)
-        self.window_move = deque([0],maxlen=movement_window)
+        self.handtip_L_x_recent = deque([0],maxlen=deque_size)
+        self.handtip_R_x_recent = deque([0],maxlen=deque_size)
+        self.handtip_recent = deque([0],maxlen=deque_size)
+        self.window_move_R = deque([0],maxlen=deque_size)
+        self.window_move_L = deque([0],maxlen=deque_size)
 
         self.is_r_hand_swipe = 0
         self.is_l_hand_swipe = 0
@@ -68,7 +69,6 @@ class Act_Hand_Swipe:
         self.is_l_hand_swipe = 0
         self.is_r_hand_swipe = 0
 
-
         x_idx = 0
         y_idx = 1
         z_idx = 2
@@ -80,61 +80,54 @@ class Act_Hand_Swipe:
 
         if (is_data):
             if self.is_base_axis(r_shoulder,r_elbow,r_handtip,naval,r_elbow,r_wrist) or self.is_base_axis(r_shoulder,r_elbow,r_handtip,naval,l_elbow,l_wrist):
-                self.handtip_L_x_recent.append(l_handtip[x_idx])
-                self.handtip_R_x_recent.append(r_handtip[x_idx])
-
+                move_bothways_L = True
+                move_bothways_R = True
                 self.is_hand_swipe = 0
                 self.is_l_hand_swipe = 0
                 self.is_r_hand_swipe = 0
 
+                r_handtip_dif = r_handtip[x_idx] - self.handtip_R_x_recent[-1]
+                if r_handtip_dif < 600:
+                    self.handtip_R_x_recent.append(r_handtip[x_idx])
+                if r_handtip_dif > 15:
+                    self.window_move_R.append(1)
+                elif r_handtip_dif < -15:
+                    self.window_move_R.append(-1)
+                else:
+                    self.window_move_R.append(0)
+                if max(self.window_move_R)- min(self.window_move_R) == 1:
+                    move_bothways_R = False
+
                 if r_wrist[y_idx] > r_elbow[y_idx]:
                     if (r_wrist[z_idx] > boundary_line):
                         if (r_wrist[y_idx] > naval[y_idx]):
-                            move_amnt_R = np.percentile(self.handtip_R_x_recent,90) - np.percentile(self.handtip_R_x_recent,10)
-                            r_handtip_dif = r_handtip[x_idx] - self.handtip_R_x_recent[-1]
-                            handtip_dif = r_handtip_dif
-                            r_hand_tip_x = r_handtip[x_idx]
-                            if self.get_data(handtip_dif, r_hand_tip_x, move_amnt_R):
-                                if move_amnt_R < thresh_med:
-                                    self.is_r_hand_swipe = 2
+                            if move_bothways_R == False:
+                                self.is_r_hand_swipe = 2
 
+                l_handtip_dif = l_handtip[x_idx] - self.handtip_L_x_recent[-1]
+                if l_handtip_dif < 600:
+                    self.handtip_L_x_recent.append(l_handtip[x_idx])
+                if l_handtip_dif > 15:
+                    self.window_move_L.append(1)
+                elif l_handtip_dif < -15:
+                    self.window_move_L.append(-1)
+                else:
+                    self.window_move_L.append(0)
+                if max(self.window_move_L)- min(self.window_move_L) == 1:
+                    move_bothways_L = False
 
                 if l_wrist[y_idx] > l_elbow[y_idx]:
                     if (l_wrist[z_idx] > boundary_line):
                         if (l_wrist[y_idx] > naval[y_idx]):
-                            move_amnt_L = np.percentile(self.handtip_L_x_recent,90) - np.percentile(self.handtip_L_x_recent,10)
-                            l_handtip_dif = l_handtip[x_idx] - self.handtip_L_x_recent[-1]
-                            handtip_dif =  l_handtip_dif
-                            l_hand_tip_x = l_handtip[x_idx]
-                            if self.get_data(handtip_dif, l_hand_tip_x , move_amnt_L):
-                                if move_amnt_L < thresh_med:
-                                    self.is_l_hand_swipe = 1
+                            if move_bothways_L == False:
+                                self.is_l_hand_swipe = 1
 
             swipe_val = []
             swipe_val.append(self.is_r_hand_swipe)
             swipe_val.append(self.is_l_hand_swipe)
             self.is_hand_swipe = max(swipe_val)
-            #self.is_hand_swipe = l_handtip[z_idx]
 
         return self.is_hand_swipe, self.is_r_hand_swipe, self.is_l_hand_swipe
-
-    def get_data(self, handtip_dif, handtip, move_amnt):
-        thresh_small = self.thresh_small
-        flag_movebothways = False
-        if abs(handtip_dif) < 600:
-            self.handtip_recent.append(handtip)
-            if handtip_dif > 0:
-                self.window_move.append(-1)
-            else:
-                self.window_move.append(1)
-        if abs(np.sum(self.window_move)) < 3:
-            flag_movebothways = True
-
-        if flag_movebothways == False:
-            if (move_amnt) > thresh_small:
-                return True
-            else:
-                return False
 
     def is_base_axis(self, shoulder, elbow, handtip, naval, rl_elbow, rl_wrist):
         x_idx = 0
@@ -142,15 +135,6 @@ class Act_Hand_Swipe:
         z_idx = 2
 
         base_check = 0
-
-        elbow_wrist_d = np.linalg.norm(elbow - handtip)
-        shoulder_elbow_d = np.linalg.norm(shoulder - elbow)
-        elbow_handtip_d = np.linalg.norm(elbow - handtip)
-        armlen = (shoulder_elbow_d + elbow_handtip_d)
-        z_front2 = naval[z_idx] + armlen
-        naval_elbow_len = np.linalg.norm(shoulder - naval) + shoulder_elbow_d
-        x_R = naval[x_idx] + naval_elbow_len
-        x_L = naval[x_idx] - naval_elbow_len
 
         if rl_wrist[y_idx] > naval[y_idx]:
             base_check = 1
