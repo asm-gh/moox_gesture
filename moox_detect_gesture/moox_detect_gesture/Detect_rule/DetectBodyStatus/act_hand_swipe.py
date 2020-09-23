@@ -17,6 +17,14 @@ class Act_Hand_Swipe:
         # 設定読み込み
         inifile = configparser.ConfigParser()
         inifile.read(os.path.dirname(os.path.abspath(__file__)) + '/../../../../../../config.ini', 'UTF-8')
+        deque_size = inifile.getint('gesture_recognition','deque_size')
+        self.thresh_small = inifile.getint('gesture_recognition','thresh_wave_small')
+        self.thresh_med = inifile.getint('gesture_recognition','thresh_wave_medium')
+        self.thresh_large = inifile.getint('gesture_recognition','thresh_wave_large')
+        self.boundary_line = inifile.getint('gesture_recognition','boundary_line')
+        self.handtip_dif_thresh = inifile.getint('gesture_recognition','handtip_dif_thresh')
+        self.hand_offset = inifile.getint('gesture_recognition','hand_offset')
+        self.outlier_thresh = inifile.getint('gesture_recognition','outlier_thresh')
 
         # 計算入力
         self.r_wrist = np.zeros((axis))
@@ -34,10 +42,6 @@ class Act_Hand_Swipe:
         self.naval = np.zeros((axis))
         self.nose = np.zeros((axis))
 
-        deque_size = inifile.getint('gesture_recognition','deque_size')
-        self.thresh_small = inifile.getint('gesture_recognition','thresh_wave_small')
-        self.thresh_med = inifile.getint('gesture_recognition','thresh_wave_medium')
-        self.thresh_large = inifile.getint('gesture_recognition','thresh_wave_large')
         self.handtip_L_x_recent = deque([0],maxlen=deque_size)
         self.handtip_R_x_recent = deque([0],maxlen=deque_size)
         self.handtip_recent = deque([0],maxlen=deque_size)
@@ -76,7 +80,7 @@ class Act_Hand_Swipe:
         thresh_small = self.thresh_small
         thresh_med = self.thresh_med
         thresh_large = self.thresh_large
-        boundary_line = -200
+        boundary_line = self.boundary_line
 
         if (is_data):
             if self.is_base_axis(r_shoulder,r_elbow,r_handtip,naval,r_elbow,r_wrist) or self.is_base_axis(r_shoulder,r_elbow,r_handtip,naval,l_elbow,l_wrist):
@@ -87,11 +91,11 @@ class Act_Hand_Swipe:
                 self.is_r_hand_swipe = 0
 
                 r_handtip_dif = r_handtip[x_idx] - self.handtip_R_x_recent[-1]
-                if r_handtip_dif < 600:
+                if r_handtip_dif < self.handtip_dif_thresh:
                     self.handtip_R_x_recent.append(r_handtip[x_idx])
-                if r_handtip_dif > 15:
+                if r_handtip_dif > self.hand_offset:
                     self.window_move_R.append(1)
-                elif r_handtip_dif < -15:
+                elif r_handtip_dif < -self.hand_offset:
                     self.window_move_R.append(-1)
                 else:
                     self.window_move_R.append(0)
@@ -105,11 +109,11 @@ class Act_Hand_Swipe:
                                 self.is_r_hand_swipe = 2
 
                 l_handtip_dif = l_handtip[x_idx] - self.handtip_L_x_recent[-1]
-                if l_handtip_dif < 600:
+                if l_handtip_dif < self.handtip_dif_thresh:
                     self.handtip_L_x_recent.append(l_handtip[x_idx])
-                if l_handtip_dif > 15:
+                if l_handtip_dif > self.hand_offset:
                     self.window_move_L.append(1)
-                elif l_handtip_dif < -15:
+                elif l_handtip_dif < -self.hand_offset:
                     self.window_move_L.append(-1)
                 else:
                     self.window_move_L.append(0)
