@@ -76,6 +76,7 @@ class Detect_action:
             self.l_hand[ax] = body_dict['l_hand'][axt[ax]]
             self.l_handtip[ax] = body_dict['l_handtip'][axt[ax]]
             self.head[ax] = body_dict['head'][axt[ax]]
+            self.naval[ax] = body_dict['naval'][axt[ax]]
             self.chest[ax] = body_dict['chest'][axt[ax]]
 
     def set_data(self,):
@@ -123,6 +124,7 @@ class Detect_action:
                     l_shoulder=self.l_shoulder,
                     head=self.head,
                     naval=self.naval,
+                    chest=self.chest,
                     is_data=self.is_data)
             self.is_hand_swipe, self.is_r_hand_swipe, self.is_l_hand_swipe = \
                 self.act_hand_swipe.calculate(
@@ -135,6 +137,7 @@ class Detect_action:
                     r_shoulder=self.r_shoulder,
                     l_shoulder=self.l_shoulder,
                     head=self.head,
+                    chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
             self.is_hand_push, self.is_r_hand_push, self.is_l_hand_push = \
@@ -148,6 +151,7 @@ class Detect_action:
                     r_shoulder=self.r_shoulder,
                     l_shoulder=self.l_shoulder,
                     head=self.head,
+                    chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
             self.is_hand_up, self.is_r_hand_up, self.is_l_hand_up = \
@@ -161,6 +165,7 @@ class Detect_action:
                     r_shoulder=self.r_shoulder,
                     l_shoulder=self.l_shoulder,
                     head=self.head,
+                    chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
             self.is_hand_clap, self.is_r_hand_clap, self.is_l_hand_clap = \
@@ -176,6 +181,7 @@ class Detect_action:
                     r_shoulder=self.r_shoulder,
                     l_shoulder=self.l_shoulder,
                     head=self.head,
+                    chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
             self.is_hand_x, self.is_hand_y, self.is_hand_z = \
@@ -191,6 +197,7 @@ class Detect_action:
                     r_shoulder=self.r_shoulder,
                     l_shoulder=self.l_shoulder,
                     head=self.head,
+                    chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
         else:
