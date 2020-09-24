@@ -23,7 +23,7 @@ class Act_Hand_Push:
         self.right_boundary_inner = inifile.getint('gesture_recognition','right_boundary_inner')
         self.left_boundary_outer = inifile.getint('gesture_recognition','left_boundary_outer')
         self.left_boundary_inner = inifile.getint('gesture_recognition','left_boundary_inner')
-
+        self.boundary_line = inifile.getint('gesture_recognition','boundary_line')
         # 計算入力
         self.r_wrist = np.zeros((axis))
         self.l_wrist = np.zeros((axis))
@@ -100,23 +100,25 @@ class Act_Hand_Push:
                     if r_shoulder_wrist_d > r_total_d:
                         if r_wrist[z_idx] > r_elbow[z_idx]:
                             if (move_amnt_R) < thresh_small:
-                                if r_wrist[x_idx] > (naval[x_idx] - self.right_boundary_outer) and r_wrist[x_idx] < (naval[x_idx] - self.right_boundary_inner):
-                                    self.is_r_hand_push = 3
-                                elif r_wrist[x_idx] > (naval[x_idx] - self.right_boundary_inner) and r_wrist[x_idx] < (naval[x_idx] + self.left_boundary_inner):
-                                    self.is_r_hand_push = 2
-                                elif r_wrist[x_idx] > (naval[x_idx] + self.left_boundary_inner) and r_wrist[x_idx] < (naval[x_idx] + self.left_boundary_outer):
-                                    self.is_r_hand_push = 1
+                                if r_wrist[z_idx] > self.boundary_line:
+                                    if r_wrist[x_idx] > (naval[x_idx] - self.right_boundary_outer) and r_wrist[x_idx] < (naval[x_idx] - self.right_boundary_inner):
+                                        self.is_r_hand_push = 3
+                                    elif r_wrist[x_idx] > (naval[x_idx] - self.right_boundary_inner) and r_wrist[x_idx] < (naval[x_idx] + self.left_boundary_inner):
+                                        self.is_r_hand_push = 2
+                                    elif r_wrist[x_idx] > (naval[x_idx] + self.left_boundary_inner) and r_wrist[x_idx] < (naval[x_idx] + self.left_boundary_outer):
+                                        self.is_r_hand_push = 1
 
                 if l_wrist[y_idx] > l_elbow[y_idx]:
                     if l_shoulder_wrist_d > l_total_d:
                         if l_wrist[z_idx] > l_elbow[z_idx]:
                             if (move_amnt_L) < thresh_small:
-                                if l_wrist[x_idx] > (naval[x_idx] - self.right_boundary_outer) and l_wrist[x_idx] < (naval[x_idx] - self.right_boundary_inner):
-                                    self.is_l_hand_push = 3
-                                elif l_wrist[x_idx] > (naval[x_idx] - self.right_boundary_inner) and l_wrist[x_idx] < (naval[x_idx] + self.left_boundary_inner):
-                                    self.is_l_hand_push = 2
-                                elif l_wrist[x_idx] > (naval[x_idx] + self.left_boundary_inner) and l_wrist[x_idx] < (naval[x_idx] + self.left_boundary_outer):
-                                    self.is_l_hand_push = 1
+                                if l_wrist[z_idx] > self.boundary_line:
+                                    if l_wrist[x_idx] > (naval[x_idx] - self.right_boundary_outer) and l_wrist[x_idx] < (naval[x_idx] - self.right_boundary_inner):
+                                        self.is_l_hand_push = 3
+                                    elif l_wrist[x_idx] > (naval[x_idx] - self.right_boundary_inner) and l_wrist[x_idx] < (naval[x_idx] + self.left_boundary_inner):
+                                        self.is_l_hand_push = 2
+                                    elif l_wrist[x_idx] > (naval[x_idx] + self.left_boundary_inner) and l_wrist[x_idx] < (naval[x_idx] + self.left_boundary_outer):
+                                        self.is_l_hand_push = 1
 
                 push_val = []
                 push_val.append(self.is_r_hand_push)
