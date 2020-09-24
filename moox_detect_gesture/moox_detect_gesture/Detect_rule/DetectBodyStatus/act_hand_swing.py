@@ -45,6 +45,7 @@ class Act_Hand_Swing:
         self.handtip_R_x_recent = deque([0],maxlen=deque_size)
         self.window_move_hilo_R = deque([0],maxlen=deque_size)
         self.window_move_hilo_L = deque([0],maxlen=deque_size)
+        self.deque_size = deque_size
 
         self.is_r_hand_swing = 0
         self.is_l_hand_swing = 0
@@ -91,6 +92,10 @@ class Act_Hand_Swing:
         flag_movebothways_R = False
 
         if (is_data):
+            if r_wrist[y_idx] < chest[y_idx]:
+                self.handtip_R_x_recent = deque([0],maxlen=self.deque_size)
+            if l_wrist[y_idx] < chest[y_idx]:
+                self.handtip_L_x_recent = deque([0],maxlen=self.deque_size)
             l_handtip_dif = l_handtip[x_idx] -self.handtip_L_x_recent[-1]
             r_handtip_dif = r_handtip[x_idx] -self.handtip_R_x_recent[-1]
             if abs(l_handtip_dif) < self.outlier_thresh:
@@ -124,7 +129,7 @@ class Act_Hand_Swing:
 
             if flag_movebothways_R:
                 if (move_amnt_R) > thresh_small:
-                    if r_handtip[y_idx] > (r_hand[y_idx]+self.hand_offset ):
+                    if r_handtip[y_idx] > (r_hand[y_idx] + self.hand_offset):
                         if r_wrist[y_idx] > r_elbow[y_idx]:
                             if (r_wrist[y_idx] > naval[y_idx]):
                                 is_r_hand_up = True
@@ -135,7 +140,7 @@ class Act_Hand_Swing:
                                     self.is_r_hand_swing = 2
             if flag_movebothways_L:
                 if (move_amnt_L) > thresh_small:
-                    if l_handtip[y_idx] > (l_hand[y_idx]+self.hand_offset ):
+                    if l_handtip[y_idx] > (l_hand[y_idx] + self.hand_offset):
                         if l_wrist[y_idx] > l_elbow[y_idx]:
                             if (l_wrist[y_idx] > naval[y_idx]):
                                 is_l_hand_up = True
@@ -144,6 +149,7 @@ class Act_Hand_Swing:
                                     self.is_l_hand_swing = 3
                                 elif (move_amnt_L) > thresh_med:
                                     self.is_l_hand_swing = 2
+
 
             swing_val = []
             swing_val.append(self.is_r_hand_swing)
