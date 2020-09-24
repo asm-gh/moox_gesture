@@ -17,6 +17,7 @@ class Act_Hand_Up:
         # 設定読み込み
         inifile = configparser.ConfigParser()
         inifile.read(os.path.dirname(os.path.abspath(__file__)) + '/../../../../../../config.ini', 'UTF-8')
+        self.nose_offset = inifile.getint('gesture_recognition','nose_offset')
 
         # 計算入力
         self.r_wrist = np.zeros((axis))
@@ -67,9 +68,9 @@ class Act_Hand_Up:
             self.is_hand_up = 0
             self.is_r_hand_up = 0
             self.is_l_hand_up = 0
-            if l_wrist[y_idx] > (nose[y_idx] + 400):
+            if l_wrist[y_idx] > (nose[y_idx] + self.nose_offset):
                 self.is_l_hand_up = 1
-            if r_wrist[y_idx] > (nose[y_idx] + 400):
+            if r_wrist[y_idx] > (nose[y_idx] + self.nose_offset):
                 self.is_r_hand_up = 1
             if self.is_r_hand_up or self.is_l_hand_up:
                 self.is_hand_up = 1
