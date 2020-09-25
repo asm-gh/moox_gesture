@@ -68,9 +68,9 @@ class Act_Hand_Up:
             self.is_hand_up = 0
             self.is_r_hand_up = 0
             self.is_l_hand_up = 0
-            if l_wrist[y_idx] > (nose[y_idx] + self.nose_offset):
+            if l_wrist[y_idx] > (head[y_idx] + self.nose_offset):
                 self.is_l_hand_up = 1
-            if r_wrist[y_idx] > (nose[y_idx] + self.nose_offset):
+            if r_wrist[y_idx] > (head[y_idx] + self.nose_offset):
                 self.is_r_hand_up = 1
             if self.is_r_hand_up or self.is_l_hand_up:
                 self.is_hand_up = 1
