@@ -13,6 +13,7 @@ from act_hand_push import Act_Hand_Push
 from act_hand_up import Act_Hand_Up
 from act_hand_clap import Act_Hand_Clap
 from act_hand_stat import Act_Hand_Stat
+from act_hand_point import Act_Hand_Point
 
 class Detect_action:
     def __init__(self, axis=3):
@@ -60,6 +61,7 @@ class Detect_action:
         self.act_hand_up = Act_Hand_Up()
         self.act_hand_clap = Act_Hand_Clap()
         self.act_hand_stat = Act_Hand_Stat()
+        self.act_hand_point = Act_Hand_Point()
         self.output_data={}
 
     def Update(self, body_dict):
@@ -101,6 +103,9 @@ class Detect_action:
         dic_data['is_hand_x'] = int(self.is_hand_x)
         dic_data['is_hand_y'] = int(self.is_hand_y)
         dic_data['is_hand_z'] = int(self.is_hand_z)
+        dic_data['is_hand_xy'] = int(self.is_hand_xy)
+        dic_data['is_r_hand_xy'] = int(self.is_r_hand_xy)
+        dic_data['is_l_hand_xy'] = int(self.is_l_hand_xy)
 
         self.output_data = dic_data
 
@@ -200,6 +205,22 @@ class Detect_action:
                     chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
+            self.is_hand_xy, self.is_r_hand_xy, self.is_l_hand_xy = \
+                self.act_hand_point.calculate(
+                    r_wrist=self.r_wrist,
+                    l_wrist=self.l_wrist,
+                    r_elbow=self.r_elbow,
+                    l_elbow=self.l_elbow,
+                    r_handtip=self.r_handtip,
+                    l_handtip=self.l_handtip,
+                    r_hand=self.r_hand,
+                    l_hand=self.l_hand,
+                    r_shoulder=self.r_shoulder,
+                    l_shoulder=self.l_shoulder,
+                    head=self.head,
+                    chest=self.chest,
+                    naval=self.naval,
+                    is_data=self.is_data)
         else:
             self.is_hand_swing = 0
             self.is_r_hand_swing = 0
@@ -219,6 +240,8 @@ class Detect_action:
             self.is_hand_x = 0
             self.is_hand_y = 0
             self.is_hand_z = 0
-
+            self.is_hand_xy = 0
+            self.is_r_hand_xy = 0
+            self.is_l_hand_xy = 0
         # データ格納
         self.set_data()
