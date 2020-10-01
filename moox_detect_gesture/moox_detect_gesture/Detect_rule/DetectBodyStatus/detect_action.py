@@ -80,6 +80,7 @@ class Detect_action:
             self.head[ax] = body_dict['head'][axt[ax]]
             self.naval[ax] = body_dict['naval'][axt[ax]]
             self.chest[ax] = body_dict['chest'][axt[ax]]
+            self.nose[ax] = body_dict['nose'][axt[ax]]
 
     def set_data(self,):
         # 出力データ準備
@@ -103,9 +104,9 @@ class Detect_action:
         dic_data['is_hand_x'] = int(self.is_hand_x)
         dic_data['is_hand_y'] = int(self.is_hand_y)
         dic_data['is_hand_z'] = int(self.is_hand_z)
-        dic_data['is_hand_xy'] = int(self.is_hand_xy)
-        dic_data['is_r_hand_xy'] = int(self.is_r_hand_xy)
-        dic_data['is_l_hand_xy'] = int(self.is_l_hand_xy)
+        dic_data['is_screen_xy'] = int(self.is_screen_xy)
+        dic_data['is_screen_x'] = int(self.is_screen_x)
+        dic_data['is_screen_y'] = int(self.is_screen_y)
 
         self.output_data = dic_data
 
@@ -127,6 +128,8 @@ class Detect_action:
                     l_handtip=self.l_handtip,
                     r_shoulder=self.r_shoulder,
                     l_shoulder=self.l_shoulder,
+                    r_hand=self.r_hand,
+                    l_hand=self.l_hand,
                     head=self.head,
                     naval=self.naval,
                     chest=self.chest,
@@ -141,6 +144,8 @@ class Detect_action:
                     l_handtip=self.l_handtip,
                     r_shoulder=self.r_shoulder,
                     l_shoulder=self.l_shoulder,
+                    r_hand=self.r_hand,
+                    l_hand=self.l_hand,
                     head=self.head,
                     chest=self.chest,
                     naval=self.naval,
@@ -172,6 +177,7 @@ class Detect_action:
                     head=self.head,
                     chest=self.chest,
                     naval=self.naval,
+                    nose=self.nose,
                     is_data=self.is_data)
             self.is_hand_clap, self.is_r_hand_clap, self.is_l_hand_clap = \
                 self.act_hand_clap.calculate(
@@ -205,7 +211,7 @@ class Detect_action:
                     chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
-            self.is_hand_xy, self.is_r_hand_xy, self.is_l_hand_xy = \
+            self.is_screen_xy, self.is_screen_x, self.is_screen_y = \
                 self.act_hand_point.calculate(
                     r_wrist=self.r_wrist,
                     l_wrist=self.l_wrist,
@@ -240,8 +246,8 @@ class Detect_action:
             self.is_hand_x = 0
             self.is_hand_y = 0
             self.is_hand_z = 0
-            self.is_hand_xy = 0
-            self.is_r_hand_xy = 0
-            self.is_l_hand_xy = 0
+            self.is_screen_xy = 0
+            self.is_screen_x = 0
+            self.is_screen_y = 0
         # データ格納
         self.set_data()
