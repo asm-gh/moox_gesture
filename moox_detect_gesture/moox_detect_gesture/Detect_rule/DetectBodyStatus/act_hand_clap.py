@@ -17,7 +17,7 @@ class Act_Hand_Clap:
         # 設定読み込み
         inifile = configparser.ConfigParser()
         inifile.read(os.path.dirname(os.path.abspath(__file__)) + '/../../../../../../config.ini', 'UTF-8')
-        self.hand_dist = inifile.getint('gesture_recognition','hand_dist')
+        self.hand_distance = inifile.getint('gesture_recognition','hand_distance')
 
         # 計算入力
         self.r_wrist = np.zeros((axis))
@@ -59,6 +59,8 @@ class Act_Hand_Clap:
         self.is_r_hand_clap = 0
         self.is_l_hand_clap = 0
         self.is_hand_clap = 0
+        hand_distance = self.hand_distance
+
         x_idx = 0
         y_idx = 1
         z_idx = 2
@@ -68,7 +70,7 @@ class Act_Hand_Clap:
             self.is_hand_clap = 0
             if l_hand[y_idx] > naval[y_idx] or r_hand[y_idx] > naval[y_idx] :
                 hand_dist = np.linalg.norm(l_hand - r_hand)
-                if hand_dist < self.hand_dist:
+                if hand_dist < hand_distance:
                     self.is_hand_clap = 1
 
         return self.is_hand_clap, self.is_r_hand_clap , self.is_l_hand_clap
