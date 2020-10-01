@@ -17,18 +17,6 @@ class Act_Hand_Swipe:
         # 設定読み込み
         inifile = configparser.ConfigParser()
         inifile.read(os.path.dirname(os.path.abspath(__file__)) + '/../../../../../../config.ini', 'UTF-8')
-        deque_size = inifile.getint('gesture_recognition','deque_size')
-        self.thresh_small = inifile.getint('gesture_recognition','thresh_wave_small')
-        self.thresh_med = inifile.getint('gesture_recognition','thresh_wave_medium')
-        self.thresh_large = inifile.getint('gesture_recognition','thresh_wave_large')
-        self.boundary_line = inifile.getint('gesture_recognition','boundary_line')
-        self.handtip_dif_thresh = inifile.getint('gesture_recognition','handtip_dif_thresh')
-        self.hand_offset = inifile.getint('gesture_recognition','hand_offset')
-        self.outlier_thresh = inifile.getint('gesture_recognition','outlier_thresh')
-        self.outlier_thresh = inifile.getint('gesture_recognition','outlier_thresh')
-        self.elbow_offset = inifile.getint('gesture_recognition','elbow_offset')
-        self.hand_correction_tip = inifile.getint('gesture_recognition','hand_correction_tip')
-        self.boundary_swipe_adj = inifile.getint('gesture_recognition','boundary_swipe_adj')
 
         # 計算入力
         self.r_wrist = np.zeros((axis))
@@ -46,15 +34,16 @@ class Act_Hand_Swipe:
         self.naval = np.zeros((axis))
         self.nose = np.zeros((axis))
 
-        self.handtip_L_x_recent = deque([0],maxlen=deque_size)
-        self.handtip_R_x_recent = deque([0],maxlen=deque_size)
-        self.handtip_recent = deque([0],maxlen=deque_size)
-        self.window_move_R = deque([0],maxlen=deque_size)
-        self.window_move_L = deque([0],maxlen=deque_size)
+        self.delay = inifile.getint('gesture_recognition','release')
+        self.movement_threshold = inifile.getint('gesture_recognition','movement_threshold')
+        self.swipe_boundary = inifile.getint('gesture_recognition','swipe_boundary')
 
         self.is_r_hand_swipe = 0
         self.is_l_hand_swipe = 0
         self.is_hand_swipe = 0
+        self.prev_r_hand = np.zeros((axis))
+        self.prev_l_hand = np.zeros((axis))
+        self.release = 0
 
     def calculate(self,
                   r_wrist=np.zeros(3),
@@ -81,66 +70,40 @@ class Act_Hand_Swipe:
         y_idx = 1
         z_idx = 2
 
-        thresh_small = self.thresh_small
-        thresh_med = self.thresh_med
-        thresh_large = self.thresh_large
-        boundary_line = self.boundary_line + 25
+        delay = self.delay
+        thresh_size = self.movement_threshold
 
         if (is_data):
-            if r_wrist[y_idx] < chest[y_idx]:
-                self.handtip_R_x_recent = deque([0],maxlen=10)
-            if l_wrist[y_idx] < chest[y_idx]:
-                self.handtip_L_x_recent = deque([0],maxlen=10)
             if self.is_base_axis(r_shoulder,r_elbow,r_handtip,naval,r_elbow,r_wrist) or self.is_base_axis(r_shoulder,r_elbow,r_handtip,naval,l_elbow,l_wrist):
-                move_bothways_L = True
-                move_bothways_R = True
-                self.is_hand_swipe = 0
-                self.is_l_hand_swipe = 0
-                self.is_r_hand_swipe = 0
+                self.release -= 1
+                if r_hand[y_idx] > chest[y_idx] and r_hand[y_idx] < head[y_idx] and l_hand[y_idx] > chest[y_idx] and l_hand[y_idx] < head[y_idx]:
+                    if self.prev_r_hand[x_idx] != 0  and self.release < 0:
+                        if abs(self.prev_r_hand[x_idx] - r_hand[x_idx]) > thresh_size and abs(self.prev_r_hand[y_idx] - r_hand[y_idx]) < thresh_size:
+                            self.is_r_hand_swipe = 1
+                            direction = self.prev_r_hand[x_idx] - r_hand[x_idx]
+                            if direction > 0:
+                                self.is_hand_swipe = 2
+                                self.release = delay
+                            else:
+                                self.is_hand_swipe = 1
+                                self.release = delay
+                    self.prev_r_hand[x_idx] = r_hand[x_idx]
+                    self.prev_r_hand[y_idx] = r_hand[y_idx]
 
-                r_handtip_dif = r_handtip[x_idx] - self.handtip_R_x_recent[-1]
-                if r_handtip_dif < self.outlier_thresh:
-                    self.handtip_R_x_recent.append(r_handtip[x_idx])
-                if r_handtip_dif > self.handtip_dif_thresh:
-                    self.window_move_R.append(1)
-                elif r_handtip_dif < -self.handtip_dif_thresh:
-                    self.window_move_R.append(-1)
-                else:
-                    self.window_move_R.append(0)
-                if max(self.window_move_R)- min(self.window_move_R) == 1:
-                    move_bothways_R = False
+                    if self.prev_l_hand[x_idx] != 0 and self.release < 0:
+                        if abs(self.prev_l_hand[x_idx] - l_hand[x_idx]) > thresh_size and abs(self.prev_l_hand[y_idx] - l_hand[y_idx]) < thresh_size:
+                            self.is_l_hand_swipe = 1
+                            direction = self.prev_l_hand[x_idx] - l_hand[x_idx]
+                            if direction > 0:
+                                self.is_hand_swipe = 2
+                                self.release = delay
+                            else:
+                                self.is_hand_swipe = 1
+                                self.release = delay
+                    self.prev_l_hand[x_idx] = l_hand[x_idx]
+                    self.prev_l_hand[y_idx] = l_hand[y_idx]
 
-                if r_wrist[y_idx] > (r_elbow[y_idx] - self.elbow_offset):
-                    if (r_wrist[z_idx] > boundary_line):
-                        if (r_wrist[y_idx] > naval[y_idx]):
-                            if move_bothways_R == False:
-                                if r_handtip[y_idx] < (r_hand[y_idx] + self.hand_offset + self.hand_correction_tip):
-                                    self.is_r_hand_swipe = 2
-
-                l_handtip_dif = l_handtip[x_idx] - self.handtip_L_x_recent[-1]
-                if l_handtip_dif < (self.outlier_thresh):
-                    self.handtip_L_x_recent.append(l_handtip[x_idx])
-                if l_handtip_dif > self.handtip_dif_thresh:
-                    self.window_move_L.append(1)
-                elif l_handtip_dif < -self.handtip_dif_thresh:
-                    self.window_move_L.append(-1)
-                else:
-                    self.window_move_L.append(0)
-                if max(self.window_move_L)- min(self.window_move_L) == 1:
-                    move_bothways_L = False
-
-                if l_wrist[y_idx] > (l_elbow[y_idx] - self.elbow_offset):
-                    if (l_wrist[z_idx] > boundary_line):
-                        if (l_wrist[y_idx] > naval[y_idx]):
-                            if move_bothways_L == False:
-                                if l_handtip[y_idx] < (l_hand[y_idx] + self.hand_offset + self.hand_correction_tip):
-                                    self.is_l_hand_swipe = 1
-
-            swipe_val = []
-            swipe_val.append(self.is_r_hand_swipe)
-            swipe_val.append(self.is_l_hand_swipe)
-            self.is_hand_swipe = max(swipe_val)
-
+        #self.is_hand_swipe = abs(self.prev_r_hand - r_hand[x_idx])
         return self.is_hand_swipe, self.is_r_hand_swipe, self.is_l_hand_swipe
 
     def is_base_axis(self, shoulder, elbow, handtip, naval, rl_elbow, rl_wrist):
