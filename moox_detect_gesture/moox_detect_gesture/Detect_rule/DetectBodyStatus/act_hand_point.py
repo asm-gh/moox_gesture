@@ -17,6 +17,8 @@ class Act_Hand_Point:
         # 設定読み込み
         inifile = configparser.ConfigParser()
         inifile.read(os.path.dirname(os.path.abspath(__file__)) + '/../../../../../../config.ini', 'UTF-8')
+        self.Screen_z = inifile.getint('gesture_recognition','Screen_z')
+        self.Point_boundary = inifile.getint('gesture_recognition','Point_boundary')
 
         # 計算入力
         self.r_wrist = np.zeros((axis))
@@ -61,6 +63,8 @@ class Act_Hand_Point:
         self.is_hand_xy = 0
         self.is_r_hand_xy = 0
         self.is_l_hand_xy = 0
+        Screen_z = self.Screen_z
+        Point_boundary = self.Point_boundary
         x_idx = 0
         y_idx = 1
         z_idx = 2
@@ -70,12 +74,12 @@ class Act_Hand_Point:
             self.is_r_hand_xy = 0
             self.is_l_hand_xy = 0
             if r_hand[y_idx] > naval[y_idx]:
-                if r_hand[z_idx] > -150:
+                if r_hand[z_idx] > -Point_boundary:
                     hand = r_hand
                     elbow = r_elbow
                     self.is_r_hand_xy = 1
             if l_hand[y_idx] > naval[y_idx]:
-                if l_hand[z_idx] > -150:
+                if l_hand[z_idx] > -Point_boundary:
                     hand = l_hand
                     elbow = l_elbow
                     self.is_l_hand_xy = 1
@@ -84,7 +88,7 @@ class Act_Hand_Point:
                     elbow = r_elbow
             if self.is_r_hand_xy == 1 or self.is_l_hand_xy == 1:
                 Screen = np.zeros((self.axis))
-                Screen[z_idx] = 600
+                Screen[z_idx] = Screen_z
                 hand[x_idx] = hand[x_idx] - elbow[x_idx]
                 hand[y_idx] = hand[y_idx] - elbow[y_idx]
                 hand[z_idx] = hand[z_idx] - elbow[z_idx]
@@ -94,7 +98,9 @@ class Act_Hand_Point:
                     for idx in range(0,2):
                         Screen[idx] = Screen[idx] + elbow[idx]
                 self.is_hand_xy = self.get_Pos(Screen[x_idx], Screen[y_idx])
-        return self.is_hand_xy, self.is_r_hand_xy , self.is_l_hand_xy
+
+                return self.is_hand_xy, Screen[x_idx] , Screen[y_idx]
+            return 0, 0, 0
 
     def get_Pos(self, x_comp, y_comp):
         cp_x = x_comp
