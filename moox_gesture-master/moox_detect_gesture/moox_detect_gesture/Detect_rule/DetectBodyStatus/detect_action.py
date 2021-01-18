@@ -14,7 +14,6 @@ from act_hand_up import Act_Hand_Up
 from act_hand_clap import Act_Hand_Clap
 from act_hand_stat import Act_Hand_Stat
 from act_hand_point import Act_Hand_Point
-from act_hand_throw_seed import Act_Hand_Throw_Seed
 
 class Detect_action:
     def __init__(self, axis=3):
@@ -63,7 +62,6 @@ class Detect_action:
         self.act_hand_clap = Act_Hand_Clap()
         self.act_hand_stat = Act_Hand_Stat()
         self.act_hand_point = Act_Hand_Point()
-        self.act_hand_throw_seed = Act_Hand_Throw_Seed()
         self.output_data={}
 
     def Update(self, body_dict):
@@ -109,9 +107,6 @@ class Detect_action:
         dic_data['is_screen_xy'] = int(self.is_screen_xy)
         dic_data['is_screen_x'] = int(self.is_screen_x)
         dic_data['is_screen_y'] = int(self.is_screen_y)
-        dic_data['is_throwing'] = int(self.is_throwing)
-        dic_data['is_r_throwing_seed'] = int(self.is_r_throwing_seed)
-        dic_data['is_l_throwing_seed'] = int(self.is_l_throwing_seed)
 
         self.output_data = dic_data
 
@@ -232,22 +227,6 @@ class Detect_action:
                     chest=self.chest,
                     naval=self.naval,
                     is_data=self.is_data)
-            self.is_throwing, self.is_r_throwing_seed, self.is_l_throwing_seed = \
-                self.act_hand_throw_seed.calculate(
-                    r_wrist=self.r_wrist,
-                    l_wrist=self.l_wrist,
-                    r_elbow=self.r_elbow,
-                    l_elbow=self.l_elbow,
-                    r_handtip=self.r_handtip,
-                    l_handtip=self.l_handtip,
-                    r_hand=self.r_hand,
-                    l_hand=self.l_hand,
-                    r_shoulder=self.r_shoulder,
-                    l_shoulder=self.l_shoulder,
-                    head=self.head,
-                    chest=self.chest,
-                    naval=self.naval,
-                    is_data=self.is_data)
         else:
             self.is_hand_swing = 0
             self.is_r_hand_swing = 0
@@ -270,8 +249,5 @@ class Detect_action:
             self.is_screen_xy = 0
             self.is_screen_x = 0
             self.is_screen_y = 0
-            self.is_throwing = 0
-            self.is_r_throwing_seed = 0
-            self.is_l_throwing_seed = 0
         # データ格納
         self.set_data()
