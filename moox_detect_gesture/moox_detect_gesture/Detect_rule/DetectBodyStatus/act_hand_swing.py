@@ -93,7 +93,7 @@ class Act_Hand_Swing:
         flag_movebothways_R = False
 
         if (is_data):
-            if not(r_hand[y_idx] > chest[y_idx] and r_hand[y_idx] < head[y_idx] and l_hand[y_idx] > chest[y_idx] and l_hand[y_idx] < head[y_idx]):
+            if True:
                 l_handtip_dif = l_handtip[x_idx] -self.handtip_L_x_recent[-1]
                 r_handtip_dif = r_handtip[x_idx] -self.handtip_R_x_recent[-1]
                 if abs(l_handtip_dif) < self.swing_max_dif:
